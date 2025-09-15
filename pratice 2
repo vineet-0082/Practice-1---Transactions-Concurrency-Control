@@ -1,0 +1,48 @@
+-- Drop tables if already exist
+DROP TABLE IF EXISTS FeePayments;
+DROP TABLE IF EXISTS StudentEnrollments;
+
+-- Create StudentEnrollments table
+CREATE TABLE StudentEnrollments (
+    enrollment_id INT PRIMARY KEY,
+    student_name VARCHAR(100),
+    course_code VARCHAR(10),
+    UNIQUE(student_name, course_code)  -- prevents duplicate same student-course
+);
+
+-- Insert sample data
+INSERT INTO StudentEnrollments VALUES
+(1, 'Ashish', 'CSE101'),
+(2, 'Riya', 'CSE102'),
+(3, 'Aman', 'CSE103'),
+(4, 'Sneha', 'CSE104'),
+(5, 'Rahul', 'CSE105');
+
+-- Create FeePayments table
+CREATE TABLE FeePayments (
+    payment_id INT PRIMARY KEY,
+    student_name VARCHAR(100),
+    amount DECIMAL(10,2) CHECK (amount > 0),
+    payment_date DATE
+);
+
+-- Insert fee records
+INSERT INTO FeePayments VALUES
+(1, 'Ashish', 5000.00, '2024-06-01'),
+(2, 'Riya', 6000.00, '2024-06-02'),
+(3, 'Aman', 5500.00, '2024-06-03'),
+(4, 'Sneha', 6500.00, '2024-06-04'),
+(5, 'Rahul', 7000.00, '2024-06-05');
+
+-- View data
+SELECT * FROM StudentEnrollments;
+SELECT * FROM FeePayments;
+
+-- Transaction test (ACID)
+START TRANSACTION;
+INSERT INTO FeePayments VALUES (6, 'Kiran', 7200.00, '2024-06-07');
+INSERT INTO FeePayments VALUES (7, 'Neha', 7500.00, '2024-06-08');
+COMMIT;
+
+-- Final check
+SELECT * FROM FeePayments;
