@@ -1,0 +1,50 @@
+-- Drop tables if already exist
+DROP TABLE IF EXISTS FeePayments;
+DROP TABLE IF EXISTS StudentEnrollments;
+
+-- Create StudentEnrollments table
+CREATE TABLE StudentEnrollments (
+    enrollment_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_name VARCHAR(100) NOT NULL,
+    course_code VARCHAR(20) NOT NULL,
+    enrollment_date DATE NOT NULL,
+    CONSTRAINT unique_student_course UNIQUE (student_name, course_code)
+);
+
+-- Insert sample data into StudentEnrollments
+INSERT INTO StudentEnrollments (student_name, course_code, enrollment_date) VALUES
+('Ashish', 'CSE101', '2024-06-01'),
+('Priya', 'CSE102', '2024-06-02'),
+('Karan', 'CSE101', '2024-06-03'),
+('Meena', 'CSE103', '2024-06-04'),
+('Ravi', 'CSE102', '2024-06-05');
+
+-- Create FeePayments table
+CREATE TABLE FeePayments (
+    payment_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_name VARCHAR(100) NOT NULL,
+    amount DECIMAL(10,2) NOT NULL CHECK (amount > 0),
+    payment_date DATE NOT NULL
+);
+
+-- Insert sample data into FeePayments
+INSERT INTO FeePayments (student_name, amount, payment_date) VALUES
+('Ashish', 5000.00, '2024-06-02'),
+('Priya', 6000.00, '2024-06-03'),
+('Karan', 5500.00, '2024-06-04'),
+('Meena', 5800.00, '2024-06-05'),
+('Ravi', 6200.00, '2024-06-06');
+
+-- Select all records
+SELECT * FROM StudentEnrollments;
+SELECT * FROM FeePayments;
+
+-- Transaction test
+START TRANSACTION;
+INSERT INTO FeePayments (student_name, amount, payment_date) VALUES 
+('Rohit', 7000.00, '2024-06-08'),
+('Neha', 7500.00, '2024-06-09');
+COMMIT;
+
+-- Final select
+SELECT * FROM FeePayments;
